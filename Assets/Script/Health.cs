@@ -21,12 +21,16 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
         
         if (currentHealth == 0 )
-         {   Time.timeScale = 0;
+        {   
+            Time.timeScale = 0;
             gameObject.SetActive(false);
             Destroy(this.gameObject);
             winlooseScript.LooseLevel();
         }
-       
+    }
 
+    private void Start()
+    {
+        Time.timeScale = 1;
     }
 }
