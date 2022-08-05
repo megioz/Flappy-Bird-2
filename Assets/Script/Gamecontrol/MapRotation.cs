@@ -16,8 +16,6 @@ public class MapRotation : MonoBehaviour
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, -180f), Speed * Time.deltaTime);
         }     
-         
-
      }
     }
 
