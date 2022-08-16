@@ -109,7 +109,7 @@ public class Tutorial : MonoBehaviour
             turning = true;
             Debug.Log(turning);
 
-            mapRotation.rotate = true;
+            mapRotation.Rotate();
         }
 
         if (collision.gameObject.tag == "wallBottom")

@@ -11,7 +11,8 @@ public class SizeStar : MonoBehaviour
     {
         if (collision.tag == "player")
         {
-            playerMovement.size = size;
+            playerMovement.Size = size;
+
             collision.GetComponent<Goal>().WinCondition(1);
             gameObject.SetActive(false);
         }

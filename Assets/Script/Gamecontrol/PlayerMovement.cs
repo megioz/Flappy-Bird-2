@@ -5,29 +5,38 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {   
     [SerializeField] private float speed= 5f;
-    private bool turning = false;
+    private bool isTurning = false;
     public MapRotation mapRotation;
     private Rigidbody2D body;
     private Vector3 direction;
     private float gravity = -9.8f;
     public float moving ;
-    public float size ;
- 
+    private float size;
+
 
     private bool isGrounded = false;
+    private float horizontal = 0f;
+
+    public float Size { get => size; set
+        {
+            size = value;
+
+            //Resize the scale
+            transform.localScale = new Vector3( Mathf.Sign(transform.localScale.x) * size, size, size);
+        }
+    }
+
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
     }
     private void Start()
     {
-        size = 5;
+        Size = 5;
     }
 
     private void Update()
     {
-        
-           
         direction.y += gravity * Time.deltaTime;
 
         if (!isGrounded)
@@ -37,57 +46,84 @@ public class PlayerMovement : MonoBehaviour
         {
             Jump();
         }
-        
-        
     }
 
     private void Jump()
     {
-        direction = Vector3.up * speed;
-        direction.x += moving;
+        if (!isTurning)
+            direction = Vector3.up * speed;
+        OnTurning(WallType.None);
 
-        var change = transform.localScale.x;
-        if (turning == true)
-        {
-            change *= -1;
-        }
-        if (change > 0.0000001)
-        {
-            transform.localScale = new Vector3(size, size, size);
-
-            direction.x = +moving;
-            turning = false;
-        }
-        else if (change < -0.00001)
-        {
-            transform.localScale = new Vector3(-size, size, size);
-            direction.x = -moving;
-            turning = false;
-        }
-
-        Debug.Log("clicking " + direction);
+        //Debug.Log("clicking " + direction);
 
         isGrounded = false;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {   
-        if (collision.gameObject.tag == "wallLeft" || collision.gameObject.tag == "wallRight")
-        {   
-            turning = true;
-            Debug.Log(turning);
-            
-            mapRotation.rotate= true;
-        } 
+    private void OnTurning(WallType wallType)
+    {
+        horizontal = transform.localScale.x;
+        if (isTurning == true)
+        {
+            //horizontal *= -1;
+            switch (wallType)
+            {
+                case (WallType.Right):
+                    horizontal = -Mathf.Abs(horizontal);    //Make it negative
+                    break;
+                case (WallType.Left):
+                    horizontal = Mathf.Abs(horizontal);     //Make it positive
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (horizontal > 0.0000001)
+        {
+            transform.localScale = new Vector3(Size, Size, Size);
 
-        if (collision.gameObject.tag == "wallBottom")
+            direction.x = +moving;
+            isTurning = false;
+        }
+        else if (horizontal < -0.00001)
+        {
+            transform.localScale = new Vector3(-Size, Size, Size);
+            direction.x = -moving;
+            isTurning = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Wall wall;
+        bool doesTouchWall = collision.gameObject.TryGetComponent(out wall);
+
+        if (!doesTouchWall)
+            return;
+
+        //if (collision.gameObject.tag == "wallLeft" || collision.gameObject.tag == "wallRight")
+        if (wall.WallType == WallType.Left || wall.WallType == WallType.Right)
+        {   
+            isTurning = true;
+            //Debug.Log(isTurning);
+
+            mapRotation.Rotate();
+
+            OnTurning(wall.WallType);
+        }
+
+        //if (collision.gameObject.tag == "wallBottom")
+        else if (wall.WallType == WallType.Bottom)
         {
             isGrounded = true;
 
-        }
-
-       
-            
+            if (mapRotation.IsRotating)
+                Jump();
+        }   
     }
- 
+
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isGrounded = false;
+    }
 }
