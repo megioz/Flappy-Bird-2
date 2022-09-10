@@ -105,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
         {   
             isTurning = true;
             //Debug.Log(isTurning);
-
+            if(mapRotation != null)
             mapRotation.Rotate();
 
             OnTurning(wall.WallType);
@@ -115,9 +115,12 @@ public class PlayerMovement : MonoBehaviour
         else if (wall.WallType == WallType.Bottom)
         {
             isGrounded = true;
-
-            if (mapRotation.IsRotating)
-                Jump();
+            if (mapRotation != null)
+            {
+                if (mapRotation.IsRotating)
+                      Jump();
+            }
+                
         }   
     }
 

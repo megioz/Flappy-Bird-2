@@ -6,7 +6,7 @@ public class TrapsTutorial : MonoBehaviour
 {   [SerializeField] private float damage;
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+                                                    
         if (collision.tag == "player")
             collision.GetComponent<Wintutorial>().TakeDamage(damage);
     }

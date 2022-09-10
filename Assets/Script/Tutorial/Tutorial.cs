@@ -10,6 +10,7 @@ public class Tutorial : MonoBehaviour
     public GameObject winTutorial;
     public GameObject avoidTutorial;
     public GameObject spike;
+    public GameObject cherry;
 
     [SerializeField] private float speed = 5f;
     private bool turning = false;
@@ -19,7 +20,7 @@ public class Tutorial : MonoBehaviour
     private float gravity = -9.8f;
     public float moving;
     public float size;
-
+    private bool isPause;
 
     private bool isGrounded = false;
     private void Awake()
@@ -30,44 +31,75 @@ public class Tutorial : MonoBehaviour
     private void Start()
     {
         size = 5;
+        isPause = true;
+       
     }
 
     private void Update()
-    {
+    {   if (movingTutorial.activeSelf == true )
+        {
+            isPause = true;
+        }
 
-      
+
+        if (Mathf.Abs(transform.position.x - 3.5f) <= 1 && directionTutorial != null)
+        {
+            isPause = true;
+            directionTutorial.SetActive(true);
+            if (Input.GetMouseButtonDown(0))
+            {
+                isPause = false;
+                if (directionTutorial != null)
+                    Destroy(directionTutorial);
+            }
+        }
+        else if (transform.position.x < -1.5f && winTutorial != null && avoidTutorial != null)
+        {
+            isPause = true;
+            winTutorial.SetActive(true);
+            avoidTutorial.SetActive(true);
+            spike.SetActive(true);
+            cherry.SetActive(true);
+            if (Input.GetMouseButtonDown(0))
+            {
+                isPause = false;
+                if (winTutorial != null && avoidTutorial != null)
+                {
+                    Destroy(winTutorial);
+                    Destroy(avoidTutorial);
+                }
+
+            }
+        }
+
+        Debug.Log(Time.timeScale);
+        if (isPause)
+        {
+            Time.timeScale = 0;
+        }
+        else
+            Time.timeScale = 1;
+
         direction.y += gravity * Time.deltaTime;
 
 
 
         if (!isGrounded)
             transform.position += direction * Time.deltaTime;
-        if (transform.position.x > 3.5f && directionTutorial != null)
-        {
-            directionTutorial.SetActive(true);
 
-        }
-        else if (transform.position.x < 1.5f && winTutorial!= null && avoidTutorial!=null)
-        {
-         winTutorial.SetActive(true);
-            avoidTutorial.SetActive(true);
-            spike.SetActive(true);
-
-            if (directionTutorial != null)
-            {
-                Destroy(directionTutorial);
-               
-            }
-        }
-          
+      
         if (Input.GetMouseButtonDown(0))
         {
+
             movingTutorial.SetActive(false);
+
+            this.isPause = false;
             Jump();
         }
 
 
     }
+
 
     private void Jump()
     {
@@ -85,10 +117,7 @@ public class Tutorial : MonoBehaviour
 
             direction.x = +moving;
             turning = false;
-            if(direction.x == 4)
-            {   
-                directionTutorial.SetActive(true);
-            }
+
         }
         else if (change < -0.00001)
         {
@@ -97,7 +126,6 @@ public class Tutorial : MonoBehaviour
             turning = false;
         }
 
-        Debug.Log("clicking " + direction);
 
         isGrounded = false;
     }
@@ -107,18 +135,13 @@ public class Tutorial : MonoBehaviour
         if (collision.gameObject.tag == "wallLeft" || collision.gameObject.tag == "wallRight")
         {
             turning = true;
-            Debug.Log(turning);
 
-            mapRotation.Rotate();
         }
 
         if (collision.gameObject.tag == "wallBottom")
         {
             isGrounded = true;
-
         }
-
-
 
     }
 

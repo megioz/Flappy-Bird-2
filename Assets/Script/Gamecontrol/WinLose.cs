@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class WinLose : MonoBehaviour
 {
+    public Animator transition;
     public bool gameEnded;
     public string nextLevelName;
     public GameObject winPanel;
@@ -26,8 +27,17 @@ public class WinLose : MonoBehaviour
         if (nextLevelName != "")
         {
             winPanel.SetActive(true);
-            SceneManager.LoadScene(nextLevelName);
+            StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex +1 ));
         }
+    }
+
+    IEnumerator LoadLevel(int levelIndex)
+    {
+        transition.SetTrigger("Start");
+
+        yield return new WaitForSeconds(1);
+
+        SceneManager.LoadScene(levelIndex);
     }
 
     public void RestartLevel()

@@ -1270,7 +1270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameEnded: 0
-  nextLevelName: Level4
+  nextLevelName: Level5
   winPanel: {fileID: 1477365324}
   loosePanel: {fileID: 2135121542}
 --- !u!4 &803946636
