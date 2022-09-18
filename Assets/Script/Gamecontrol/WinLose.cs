@@ -12,6 +12,10 @@ public class WinLose : MonoBehaviour
     public string nextLevelName;
     public GameObject winPanel;
     public GameObject loosePanel;
+    public GameObject gamePlay;
+    public GameObject backgroundAnimation;
+    
+
     public void Winlevel()
     {
         if (!gameEnded)
@@ -24,21 +28,11 @@ public class WinLose : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if (nextLevelName != "")
-        {
+       
             winPanel.SetActive(true);
-            StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex +1 ));
-        }
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1 );
     }
 
-    IEnumerator LoadLevel(int levelIndex)
-    {
-        transition.SetTrigger("Start");
-
-        yield return new WaitForSeconds(1);
-
-        SceneManager.LoadScene(levelIndex);
-    }
 
     public void RestartLevel()
     {
