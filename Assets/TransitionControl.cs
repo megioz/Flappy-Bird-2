@@ -7,12 +7,23 @@ public class TransitionControl : MonoBehaviour
     // Start is called before the first frame update
     public GameObject transiton;
     public GameObject gamePlay;
+    public WinLose winLose;
+    public GameObject winPanel;
+
+   
     public void selfDisable()
-    {
+    {   
         transiton.SetActive(false);
 
-        gamePlay.SetActive(true);
 
-        
+
+
     }
+    public void gameplayDisable()
+    {
+        transiton.SetActive(true);
+        gamePlay.SetActive(false);
+        winPanel.SetActive(false);
+    }
+
 }

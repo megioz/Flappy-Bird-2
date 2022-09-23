@@ -14,32 +14,39 @@ public class WinLose : MonoBehaviour
     public GameObject loosePanel;
     public GameObject gamePlay;
     public GameObject backgroundAnimation;
-    
 
+    
     public void Winlevel()
     {
         if (!gameEnded)
-        {  
+        {
+
             
             winPanel.SetActive(true);
+            backgroundAnimation.SetActive(true);
+            StartCoroutine(LoadLevel(SceneManager.GetActiveScene().buildIndex + 1));
             gameEnded = true;
         }
     }
 
-    public void LoadNextLevel()
-    {
-       
-            winPanel.SetActive(true);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex +1 );
+
+    IEnumerator LoadLevel(int levelIndex)
+    { 
+        transition.SetTrigger("Start");
+
+
+
+        yield return new WaitForSeconds(1);
+
+        SceneManager.LoadScene(levelIndex);
     }
-
-
-    public void RestartLevel()
+public void RestartLevel()
     {
         loosePanel.SetActive(true);
         if (Time.timeScale  != 0)
         {   
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
             
         }      
     }
